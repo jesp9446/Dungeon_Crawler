@@ -1,7 +1,7 @@
 from map import map
 from room import room
 
-play_map = map(5,10)
+play_map = map(10,10)
 
 play_map.paint_grid()
 

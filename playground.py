@@ -2,6 +2,32 @@ import random
 
 
 
+exits = {"north":random.choice([True,False]),
+        "east" :random.choice([True,False]),
+        "south":random.choice([True,False]),
+        "west" :random.choice([True,False])
+        }
+
+
+directions = ["north","south","east","west"]
+
+random_int = random.randint(1,100)
+if random_int <= 10:
+    amount_of_exits = 1
+elif random_int <= 60:
+    amount_of_exits = 2
+elif random_int <= 90:
+    amount_of_exits = 3
+else:
+    amount_of_exits = 4
+
+chosen_exits = random.sample(directions,amount_of_exits)
+
+exits = {direction: direction in chosen_exits for direction in directions}
+
+print(amount_of_exits)
+print(chosen_exits)
+
 
 
 

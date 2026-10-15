@@ -3,13 +3,28 @@ import random
 class room:
     def __init__(self,point):
 
-        self.exits = {"north":random.choice([True,False]),
-                      "east" :random.choice([True,False]),
-                      "south":random.choice([True,False]),
-                      "west" :random.choice([True,False])
-                      }
+        self.exits = None
 
         self.point = point
+
+        self.starting_exits()
+
+    def starting_exits(self):
+        directions = ["north","south","east","west"]
+        random_int = random.randint(1,100)
+
+        if random_int <= 30:
+            amount_of_exits = 1
+        elif random_int <= 70:
+            amount_of_exits = 2
+        elif random_int <= 90:
+            amount_of_exits = 3
+        else:
+            amount_of_exits = 4
+
+        chosen_exits = random.sample(directions,amount_of_exits)
+
+        self.exits = {direction: direction in chosen_exits for direction in directions}
 
 
     def get_point(self):

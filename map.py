@@ -20,7 +20,7 @@ class map:
         self.coloms = coloms
         self.grid = [[" "] * coloms for _ in range(rows)]
 
-        self.room_depth = 5
+        self.room_depth = 10
 
         self.fill_map()
 
@@ -118,6 +118,8 @@ class map:
                         self.close_room_door(new_room_point,opposite[orientation])
 
     def fill_map(self):
-        self.create_adjacent_rooms(self.create_random_start_room())
+        start_cell = self.create_random_start_room()
+        print(start_cell.get_point().get_coords())
+        self.create_adjacent_rooms(start_cell)
 
 
