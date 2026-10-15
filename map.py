@@ -2,10 +2,16 @@ import random
 from room import room
 from position import point
 
-offset = {"north":(0,-1,"south"),
-          "east":(1,0,"west"),
-          "south":(0,1,"north"),
-          "west":(-1,0,"east")
+offset = {"north":(0,-1),
+          "east":(1,0),
+          "south":(0,1),
+          "west":(-1,0)
+          }
+
+opposite = {"north":"south",
+          "east":"west",
+          "south":"north",
+          "west":"east"
           }
 
 class map:
@@ -13,6 +19,8 @@ class map:
         self.rows = rows
         self.coloms = coloms
         self.grid = [[" "] * coloms for _ in range(rows)]
+
+        self.room_depth = 5
 
     def get_rows(self):
         return self.rows
@@ -24,10 +32,10 @@ class map:
         return self.grid
 
     def paint_grid(self):
-        for row in range(len(self.grid)):
+        for row in self.grid:
             temp_row = []
-            for cell in range(len(self.grid[row])):
-                if isinstance(self.get_cell(point(cell,row)),room):
+            for cell in row:
+                if isinstance(cell,room):
                     temp_row.append("R")
                 else:
                     temp_row.append(" ")
@@ -43,23 +51,15 @@ class map:
         return self.get_cell(position) == " "
   
     def create_random_start_room(self):
-        if random.choice([True,False]):
-            randrange_col = random.randrange(self.coloms)
-
-            if random.choice([True,False]):
-                return self.create_room(point(randrange_col, 0))
-            
-            else:
-                return self.create_room(point(randrange_col, self.rows - 1))
-
+        side = random.randrange(4)
+        if side == 0:
+            return self.create_room(point(random.randrange(self.coloms), 0))
+        elif side == 1:
+            return self.create_room(point(random.randrange(self.coloms), self.rows - 1))
+        elif side == 2:
+            return self.create_room(point(0, random.randrange(self.rows)))
         else:
-            randrange_row = random.randrange(self.rows)
-
-            if random.choice([True,False]):
-                return self.create_room(point(0, randrange_row))
-            
-            else:
-                return self.create_room(point(self.coloms - 1, randrange_row))
+            return self.create_room(point(self.coloms - 1, random.randrange(self.rows)))
 
     def create_room(self, position, door_open=None):
         new_room = room(point(position.get_x(),position.get_y()))
@@ -75,7 +75,7 @@ class map:
 
         
     def create_adjacent_rooms(self, room:room , counter=0):
-        if not counter >= 5:
+        if not counter < self.room_depth:
             return
         else:
             room_exits = room.get_exits()
@@ -84,5 +84,5 @@ class map:
                 if room_exits[key]:
                     new_room_point = point(room.get_point().get_x() + offset[key][0],room.get_point().get_y() + offset[key][1])
                     if self.valid_room_position(new_room_point):
-                        new_room = self.create_room(new_room_point, offset[key][2])
+                        new_room = self.create_room(new_room_point, opposite[key])
                         self.create_adjacent_rooms(new_room, counter + 1)
