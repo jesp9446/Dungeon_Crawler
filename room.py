@@ -18,8 +18,8 @@ class room:
     def get_exits(self):
         return self.exits
 
-    def set_exits(self, key, bool):
-        self.exits[key] = bool
+    def set_exits(self, orientation, bool):
+        self.exits[orientation] = bool
     
     def exits_on_edge_map(self, coords, map):
         if coords[1] == 0:

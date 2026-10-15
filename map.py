@@ -22,6 +22,8 @@ class map:
 
         self.room_depth = 5
 
+        self.fill_map()
+
     def get_rows(self):
         return self.rows
 
@@ -68,21 +70,54 @@ class map:
         self.set_cell(new_room.get_point(),new_room)
         return new_room
 
-    def valid_room_position(self, position):
-        if (position.get_y() < self.rows and position.get_y() >= 0) and (position.get_x() < self.coloms and position.get_x() >= 0):
-            return self.is_cell_empty(position)
-        return False
+    def valid_grid_position(self,position):
+        return (position.get_y() < self.rows and position.get_y() >= 0) and (position.get_x() < self.coloms and position.get_x() >= 0)
 
+    def valid_room_position(self, position):
+        return self.valid_grid_position(position) and self.is_cell_empty(position)
+
+    def close_room_door(self,position,orientation):
+        self.get_cell(position).set_exits(orientation,False)
         
     def create_adjacent_rooms(self, room:room , counter=0):
-        if not counter < self.room_depth:
-            return
+        if counter >= self.room_depth:
+            room_exits = room.get_exits()
+
+            for orientation in list(room_exits.keys()):
+
+                if room_exits[orientation]:
+                    adjacent_point = point(
+                        room.get_point().get_x() + offset[orientation][0],
+                        room.get_point().get_y() + offset[orientation][1]
+                        )
+                    
+                    if not self.valid_grid_position(adjacent_point):
+                        room.set_exits(orientation,False)
+
+                    elif self.is_cell_empty(adjacent_point):
+                        room.set_exits(orientation,False)
+
+                    elif not self.get_cell(adjacent_point).get_exits()[opposite[orientation]]:
+                        self.close_room_door(adjacent_point,opposite[orientation])
         else:
             room_exits = room.get_exits()
-            room_exits_keys = list(room_exits.keys())
-            for key in room_exits_keys:
-                if room_exits[key]:
-                    new_room_point = point(room.get_point().get_x() + offset[key][0],room.get_point().get_y() + offset[key][1])
+
+            for orientation in list(room_exits.keys()):
+
+                if room_exits[orientation]:
+                    new_room_point = point(
+                        room.get_point().get_x() + offset[orientation][0],
+                        room.get_point().get_y() + offset[orientation][1]
+                        )
+                    
                     if self.valid_room_position(new_room_point):
-                        new_room = self.create_room(new_room_point, opposite[key])
+                        new_room = self.create_room(new_room_point, opposite[orientation])
                         self.create_adjacent_rooms(new_room, counter + 1)
+
+                    elif self.valid_grid_position(new_room_point):
+                        self.close_room_door(new_room_point,opposite[orientation])
+
+    def fill_map(self):
+        self.create_adjacent_rooms(self.create_random_start_room())
+
+
