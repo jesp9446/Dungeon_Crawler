@@ -18,3 +18,4 @@ class point:
 
     def get_coords(self):
         return (self.x, self.y)
+    

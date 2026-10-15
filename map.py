@@ -63,7 +63,7 @@ class map:
 
     def create_room(self, position, door_open=None):
         new_room = room(point(position.get_x(),position.get_y()))
-        if door_open != None:
+        if door_open is not None:
             new_room.set_exits(door_open,True)
         self.set_cell(new_room.get_point(),new_room)
         return new_room
@@ -81,9 +81,7 @@ class map:
             room_exits = room.get_exits()
             room_exits_keys = list(room_exits.keys())
             for key in room_exits_keys:
-                if not room_exits[key]:
-                    pass
-                else:
+                if room_exits[key]:
                     new_room_point = point(room.get_point().get_x() + offset[key][0],room.get_point().get_y() + offset[key][1])
                     if self.valid_room_position(new_room_point):
                         new_room = self.create_room(new_room_point, offset[key][2])

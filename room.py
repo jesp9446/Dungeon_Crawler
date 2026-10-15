@@ -30,3 +30,4 @@ class room:
             self.exits["south"] = False
         if coords[0] == map.get_coloms() - 1:
             self.exits["east"] = False
+
