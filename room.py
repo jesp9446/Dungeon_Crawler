@@ -19,6 +19,12 @@ class room:
 
         self.starting_exits(open_door)
 
+        self.room_grid = [["","","","",""],
+                          ["","","","",""],
+                          ["","","","",""],
+                          ["","","","",""],
+                          ["","","","",""],]
+
     def starting_exits(self, open_door):
 
         directions = ["north","south","east","west"]
