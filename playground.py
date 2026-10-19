@@ -1,55 +1,24 @@
-import random
+import curses
 
 
+def main(stdscr):
+    # Hide the blinking cursor
+    curses.curs_set(0)
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    curses.init_pair(2,curses.COLOR_BLACK,curses.COLOR_BLACK)
 
-exits = {"north":random.choice([True,False]),
-        "east" :random.choice([True,False]),
-        "south":random.choice([True,False]),
-        "west" :random.choice([True,False])
-        }
+    # Display some text
+    stdscr.addstr(3,3," " * 40, curses.color_pair(1))
+    for _ in range(4,20):
+        stdscr.addstr(_,3," " * 2, curses.color_pair(1))
+        stdscr.addstr(_,41," " * 2, curses.color_pair(1))
+    stdscr.addstr(20 ,3," " * 40, curses.color_pair(1))
 
+    stdscr.refresh()
 
-directions = ["north","south","east","west"]
+    stdscr.getch()
 
-random_int = random.randint(1,100)
-if random_int <= 10:
-    amount_of_exits = 1
-elif random_int <= 60:
-    amount_of_exits = 2
-elif random_int <= 90:
-    amount_of_exits = 3
-else:
-    amount_of_exits = 4
+# Initialize and safely clean up curses
+curses.wrapper(main)
 
-chosen_exits = random.sample(directions,amount_of_exits)
-
-exits = {direction: direction in chosen_exits for direction in directions}
-
-print(amount_of_exits)
-print(chosen_exits)
-
-
-
-
-
-'''
-    def create_random_start_room(self):
-        if random.choice([True,False]):
-            randrange_col = random.randrange(self.coloms)
-
-            if random.choice([True,False]):
-                return self.create_room(point(randrange_col, 0))
-            
-            else:
-                return self.create_room(point(randrange_col, self.rows - 1))
-
-        else:
-            randrange_row = random.randrange(self.rows)
-
-            if random.choice([True,False]):
-                return self.create_room(point(0, randrange_row))
-            
-            else:
-                return self.create_room(point(self.coloms - 1, randrange_row))
-                            
-'''
