@@ -20,7 +20,7 @@ class map:
         self.coloms = coloms
         self.grid = [[" "] * coloms for _ in range(rows)]
 
-        self.room_depth = 10
+        self.room_depth = 7
 
         self.fill_map()
 
@@ -64,9 +64,7 @@ class map:
             return self.create_room(point(self.coloms - 1, random.randrange(self.rows)))
 
     def create_room(self, position, door_open=None):
-        new_room = room(point(position.get_x(),position.get_y()))
-        if door_open is not None:
-            new_room.set_exits(door_open,True)
+        new_room = room(point(position.get_x(),position.get_y()),door_open)
         self.set_cell(new_room.get_point(),new_room)
         return new_room
 

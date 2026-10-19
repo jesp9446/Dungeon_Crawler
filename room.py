@@ -1,30 +1,58 @@
 import random
 
-class room:
-    def __init__(self,point):
+opposite = {"north":"south",
+          "east":"west",
+          "south":"north",
+          "west":"east"
+          }
 
-        self.exits = None
+class room:
+    def __init__(self,point , open_door=None):
+
+        self.exits = {"north":False,
+                    "east":False,
+                    "south":False,
+                    "west":False
+                    }
 
         self.point = point
 
-        self.starting_exits()
+        self.starting_exits(open_door)
 
-    def starting_exits(self):
+    def starting_exits(self, open_door):
+
         directions = ["north","south","east","west"]
         random_int = random.randint(1,100)
 
-        if random_int <= 30:
-            amount_of_exits = 1
-        elif random_int <= 70:
-            amount_of_exits = 2
-        elif random_int <= 90:
-            amount_of_exits = 3
+        if open_door is not None:
+            directions.remove(open_door)
+            if random_int <= 80:
+                self.exits[open_door] = True
+                self.exits[opposite[open_door]] = True
+                amount_of_exits = 0
+            elif random_int <= 90:
+                amount_of_exits = 2
+                chosen_exits = random.sample(directions,amount_of_exits)
+
+                self.exits = {direction: direction in chosen_exits for direction in directions}
+                self.exits[open_door] = True
+            else:
+                amount_of_exits = 3
+
+                chosen_exits = random.sample(directions,amount_of_exits)
+
+                self.exits = {direction: direction in chosen_exits for direction in directions}
+                self.exits[open_door] = True
+
         else:
-            amount_of_exits = 4
+            if random_int <= 40:
+                amount_of_exits = 2
+            else:
+                amount_of_exits = 3
 
-        chosen_exits = random.sample(directions,amount_of_exits)
+            chosen_exits = random.sample(directions,amount_of_exits)
 
-        self.exits = {direction: direction in chosen_exits for direction in directions}
+            self.exits = {direction: direction in chosen_exits for direction in directions}
 
 
     def get_point(self):
